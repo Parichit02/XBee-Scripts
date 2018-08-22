@@ -16,22 +16,26 @@ void flashLed(int pin, int times, int wait) {
     }
 }
 void setup() {
-  flashLed(13, 5,10);
+  
   Serial1.begin(9600);
   xbee.begin(Serial1);
+  pinMode(13, OUTPUT);  
+  flashLed(13, 10,100);
   Serial.begin(9600);
-  
 }
+
 void loop() {
 String sample;
   xbee.readPacket(); 
     if (xbee.getResponse().isAvailable()) {
-      Serial.println(xbee.getResponse().getApiId());
+      flashLed(13,5,100);
+//      Serial.println(xbee.getResponse().getApiId());
       if (xbee.getResponse().getApiId() == ZB_RX_RESPONSE) {
         xbee.getResponse().getZBRxResponse(rx);
         for (int i = 0; i < rx.getDataLength(); i++) {
           sample += (char)rx.getData(i);
         }
+//        flashLed(13,10,100);
         Serial.println(sample);
       }
     }else if (xbee.getResponse().isError()) {
